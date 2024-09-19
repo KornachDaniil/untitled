@@ -47,25 +47,30 @@ int main()
     fin.close();
     int result = 0;
     int i = 0, g =  0;
-    int SearhWord;
-    string currentWord = wordList[i];
-    cout << "Enter the number of words you want to search: ";
-    cin >> SearhWord;
-    cout << endl << "You want find the " <<  '<' << wordList[SearhWord] << '>' << endl << endl;
-    if (wordList[SearhWord] == wordList[0])
-        cout << "You can't find this word." << endl;
+    int NumberEndWord, NumberStartWord;
+    cout << "Enter the number start word: ";
+    cin >> NumberStartWord;
+    string StartWord = wordList[NumberStartWord];
+    cout << "\nEnter the number of words you want to search: ";
+    cin >> NumberEndWord;
+    cout << endl << "Start word is a " << '<' << StartWord << '>' << endl <<"You want find the " <<  '<' << wordList[NumberEndWord] << '>' << endl << endl;
+    // if (wordList[NumberEndWord] == wordList[0])
+    //     cout << "You can't find this word." << endl;
     while(true) {
         if (result == 1) {
-            cout << currentWord << "->" << wordList[g] << endl;
-            currentWord = wordList[g];
+            cout << StartWord << "->" << wordList[g] << endl;
+            StartWord = wordList[g];
             i++; g++;
+        }
+        else if(StartWord != wordList[0] && i == 0) {
+            g = 0; i++;
         }
         else {
             g++;
         }
-        if(currentWord == wordList[SearhWord]) {
+        if(StartWord == wordList[NumberEndWord]) {
             return 0;
         }
-        result = c(currentWord.data(), wordList[g].data(), wordList);
+        result = c(StartWord.data(), wordList[g].data(), wordList);
     }
 }

@@ -1,8 +1,6 @@
-dip
 dod
 dot
 hot
-dot
 dog
 lot
 log
