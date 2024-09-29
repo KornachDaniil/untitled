@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <queue>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -9,11 +10,21 @@ using namespace std;
 //пама->папа(результат 1)
 //мама->пара(результат 2)
 
-int c(char* a, char* b, const vector<string>& wordList) {
+int c(const char* a, const char* b, const vector<string>& wordList, const string& CurrentWord = "", int j = -1) {
     int c = 0;
-    while (*a && *b) {
-        if (*a != *b) c++;
-        a++; b++;
+    if (CurrentWord.size() == wordList[j].size() ) {
+        while (*a && *b) {
+            if (*a != *b) c++;
+            a++; b++;
+        }
+    }
+    else {
+        int res = wordList[j].size() - CurrentWord.size();
+        c = abs(res);
+        while (*a && *b) {
+            if (*a != *b) c++;
+            a++; b++;
+        }
     }
     return c;
 }
@@ -46,31 +57,54 @@ int main()
         cout << "File is not open." << endl;
     fin.close();
     int result = 0;
-    int i = 0, g =  0;
     int NumberEndWord, NumberStartWord;
+    int j = 0;
     cout << "Enter the number start word: ";
     cin >> NumberStartWord;
     string StartWord = wordList[NumberStartWord];
-    cout << "\nEnter the number of words you want to search: ";
+    cout << "\nEnter the number end word: ";
     cin >> NumberEndWord;
-    cout << endl << "Start word is a " << '<' << StartWord << '>' << endl <<"You want find the " <<  '<' << wordList[NumberEndWord] << '>' << endl << endl;
-    // if (wordList[NumberEndWord] == wordList[0])
-    //     cout << "You can't find this word." << endl;
+    string EndWord = wordList[NumberEndWord];
+    cout << endl << "Start word is a " << '<' << StartWord << '>' << endl <<"End word is a " <<  '<' << EndWord << '>' << endl << endl;
+    if (StartWord == EndWord) {
+        cout << "You can't find this word." << endl;
+        return -1;
+    }
+    if(NumberEndWord < NumberStartWord) {
+        j = wordList.size() - 1;
+        j *= -1;
+    }
     while(true) {
-        if (result == 1) {
-            cout << StartWord << "->" << wordList[g] << endl;
-            StartWord = wordList[g];
-            i++; g++;
+        if (result == 0) {
+            result = c(StartWord.data(), EndWord.data(), wordList, StartWord, NumberEndWord);
+            if (result == 1) {
+                cout << StartWord << " -> " << EndWord << endl;
+                return 0;
+            }
+            else {
+                j++;
+            }
         }
-        else if(StartWord != wordList[0] && i == 0) {
-            g = 0; i++;
+        else if(result == 1) {
+            cout << StartWord << " -> " << wordList[abs(j)] << endl;
+            StartWord = wordList[abs(j)];
+            result = c(StartWord.data(), EndWord.data(), wordList, StartWord, NumberEndWord);
+            if (result == 1) {
+                cout << StartWord << " -> " << EndWord << endl;
+                return 0;
+            }
+            j++;
+            if (abs(j) >= wordList.size() - 1)
+                j = 0;
         }
         else {
-            g++;
+            j++;
+            if (abs(j) >= wordList.size() - 1)
+                j = 0;
         }
-        if(StartWord == wordList[NumberEndWord]) {
+        if (StartWord == EndWord) {
             return 0;
         }
-        result = c(StartWord.data(), wordList[g].data(), wordList);
+        result = c(StartWord.data(), wordList[abs(j)].data(), wordList, StartWord, abs(j));
     }
 }
