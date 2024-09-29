@@ -33,9 +33,9 @@ int main()
 {
     setlocale(LC_ALL, "rus");
     string path = "myFile.txt";
-    // cout << "Enter name your file: ";
-    // cin >> path;
-    const string& FileName = path ;//+ ".txt";
+    cout << "Enter name your file: ";
+    cin >> path;
+    const string& FileName = path + ".txt";
     ifstream fin;
     fin.open(FileName);
     vector<string> wordList;
