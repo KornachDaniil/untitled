@@ -2,7 +2,6 @@
 #include <string>
 #include <fstream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
@@ -10,21 +9,11 @@ using namespace std;
 //пама->папа(результат 1)
 //мама->пара(результат 2)
 
-int c(const char* a, const char* b, const vector<string>& wordList, const string& CurrentWord = "", int j = -1) {
+int c(const char* a, const char* b) {
     int c = 0;
-    if (CurrentWord.size() == wordList[j].size() ) {
-        while (*a && *b) {
-            if (*a != *b) c++;
-            a++; b++;
-        }
-    }
-    else {
-        int res = wordList[j].size() - CurrentWord.size();
-        c = abs(res);
-        while (*a && *b) {
-            if (*a != *b) c++;
-            a++; b++;
-        }
+    while (*a && *b) {
+        if (*a != *b) c++;
+        a++; b++;
     }
     return c;
 }
@@ -32,9 +21,10 @@ int c(const char* a, const char* b, const vector<string>& wordList, const string
 int main()
 {
     setlocale(LC_ALL, "rus");
-    string path = "myFile.txt";
-    cout << "Enter name your file: ";
-    cin >> path;
+    // Работа с файлом
+    string path = "myFile";
+    // cout << "Enter name your file: ";
+    // cin >> path;
     const string& FileName = path + ".txt";
     ifstream fin;
     fin.open(FileName);
@@ -48,63 +38,86 @@ int main()
             wordList.push_back(word);
         }
 
+        // Вывод всех слов из файла
         for(int i = 0; i < wordList.size(); i++)
         {
             cout << i << '.'  << ' ' << wordList[i] << endl;
         }
+        //
     }
     else
         cout << "File is not open." << endl;
     fin.close();
+    //
+
     int result = 0;
     int NumberEndWord, NumberStartWord;
     int j = 0;
+
+    // Ввод и вывод Начального и Конечного слов
     cout << "Enter the number start word: ";
     cin >> NumberStartWord;
-    string StartWord = wordList[NumberStartWord];
     cout << "\nEnter the number end word: ";
     cin >> NumberEndWord;
+    string StartWord = wordList[NumberStartWord];
     string EndWord = wordList[NumberEndWord];
     cout << endl << "Start word is a " << '<' << StartWord << '>' << endl <<"End word is a " <<  '<' << EndWord << '>' << endl << endl;
-    if (StartWord == EndWord) {
+    //
+
+    // Проверка на условие задачи
+    if (StartWord == EndWord || StartWord.size() != EndWord.size()) {
         cout << "You can't find this word." << endl;
         return -1;
     }
-    if(NumberEndWord < NumberStartWord) {
-        j = wordList.size() - 1;
-        j *= -1;
+    //
+
+    //Обратный ход по списку
+    // if(NumberEndWord < NumberStartWord) {
+    //     vector<string> temp(wordList.begin(), wordList.end());
+    //     wordList.clear();
+    //     for(int i = temp.size() - 1; i != 0; i--) {
+    //         wordList.push_back(temp[i]);
+    //     }
+    //     temp.clear();
+    // }
+    //
+
+    // Попытка сразу получить преобразование от начального в конечное
+    result = c(StartWord.data(), EndWord.data());
+    if (result == 1) {
+        cout << StartWord << " -> " << EndWord << endl;
+        return 0;
     }
+    bool bAvtife = false;
+    //
     while(true) {
-        if (result == 0) {
-            result = c(StartWord.data(), EndWord.data(), wordList, StartWord, NumberEndWord);
-            if (result == 1) {
-                cout << StartWord << " -> " << EndWord << endl;
-                return 0;
-            }
-            else {
-                j++;
-            }
-        }
-        else if(result == 1) {
-            cout << StartWord << " -> " << wordList[abs(j)] << endl;
-            StartWord = wordList[abs(j)];
-            result = c(StartWord.data(), EndWord.data(), wordList, StartWord, NumberEndWord);
-            if (result == 1) {
-                cout << StartWord << " -> " << EndWord << endl;
-                return 0;
+        if(result == 1) {
+            cout << StartWord << " -> " << wordList[j] << endl;
+            StartWord = wordList[j];
+            // Попытка сразу получить преобразование от текущего в конечное
+            if (wordList[j].size() == StartWord.size()) {
+                result = c(StartWord.data(), EndWord.data());
+                if (result == 1) {
+                    cout << StartWord << " -> " << EndWord << endl;
+                    return 0;
+                }
             }
             j++;
-            if (abs(j) >= wordList.size() - 1)
-                j = 0;
+            //
         }
         else {
-            j++;
-            if (abs(j) >= wordList.size() - 1)
-                j = 0;
+            if (bAvtife == true)
+                j++;
+        }
+        if (j >= wordList.size() - 1) {
+            cout << "\nIt is impossible to get the given word: " << EndWord << endl;
+            return -1;
         }
         if (StartWord == EndWord) {
             return 0;
         }
-        result = c(StartWord.data(), wordList[abs(j)].data(), wordList, StartWord, abs(j));
+        bAvtife = true;
+        if (StartWord.size() == wordList[j].size())
+            result = c(StartWord.data(), wordList[j].data());
     }
 }
