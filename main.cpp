@@ -54,9 +54,9 @@ int main() {
     int NumberEndWord, NumberStartWord;
 
     // Ввод и вывод Начального и Конечного слов
-    cout << "Enter the number start word: ";
+    cout << "Enter the number Start word: ";
     cin >> NumberStartWord;
-    cout << "\nEnter the number end word: ";
+    cout << "\nEnter the number End word: ";
     cin >> NumberEndWord;
     string StartWord = wordList[NumberStartWord];
     string EndWord = wordList[NumberEndWord];
@@ -79,6 +79,7 @@ int main() {
     //
 
     int j = 0;
+    vector<string> tempWord(wordList.begin(), wordList.end()); // Сохраняем список в массив
 
     while (true) {
         while (true) {
@@ -106,8 +107,13 @@ int main() {
             }
         }
         if(j > wordList.size()) {
-            cout << "\nCannot be converted to a given word." << endl;
-            return -1;
+            for (int i = 0; i < tempWord.size(); i++ ) {
+                wordList[i] = tempWord[i];
+            }
+            j = -1;
+            // Заканчиваем искать слово потому что невозможно найти(пока не подключено, потому что нужно рестарнуть массив)
+            // cout << "\nCannot be converted to a given word." << endl;
+            // return -1;
         }
         j++;
     }
@@ -116,8 +122,9 @@ int main() {
 // 12 - 18 +
 // 0 - 8 +
 // 2 - 14 +
-// 4 - 14 -+ первый вариант невозможно получить по принципу работы кода
-// 6 - 17 -+  первый вариант невозможно получить по принципу работы кода
+// 4 - 14 +
+// 6 - 17 +
 // 8 - 18 +
 // 1 - 3 +
 // 3 - 19 +
+// 0 - 14 +
