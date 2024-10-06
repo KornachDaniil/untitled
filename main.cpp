@@ -105,6 +105,10 @@ int main() {
                 return 0;
             }
         }
+        if(j > wordList.size()) {
+            cout << "\nCannot be converted to a given word." << endl;
+            return -1;
+        }
         j++;
     }
 }
