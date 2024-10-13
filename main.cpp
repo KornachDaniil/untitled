@@ -77,7 +77,8 @@ int main() {
         return 0;
     }
     //
-
+    size_t paramEror = wordList.size() / 2; // Счетчик
+    int iterationReloadArray = 0;
     int j = 0;
     vector<string> tempWord(wordList.begin(), wordList.end()); // Сохраняем список в массив
 
@@ -111,9 +112,11 @@ int main() {
                 wordList[i] = tempWord[i];
             }
             j = -1;
-            // Заканчиваем искать слово потому что невозможно найти(пока не подключено, потому что нужно рестарнуть массив)
-            // cout << "\nCannot be converted to a given word." << endl;
-            // return -1;
+            iterationReloadArray++;
+            if (iterationReloadArray >= paramEror) {
+                cout << "\nCannot be converted to a given word." << endl;
+                return -1;
+            }
         }
         j++;
     }
